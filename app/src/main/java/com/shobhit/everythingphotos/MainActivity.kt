@@ -8,6 +8,7 @@ import com.google.gson.internal.GsonBuildConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
+import java.io.Serializable
 
 val authKey_Pexel = "563492ad6f917000010000010b539d05730741d9909e8c7769de4389"
 
@@ -76,7 +77,7 @@ class PexelPageData (val page: Int, val per_page: Int, val next_page: String,
                      val prev_page: String, val photos: List<PexelPhotos>)
 
 class PexelPhotos (val id: String, val width: Float, val height: Float, val url: String,
-                   val photographer: String, val photographer_url: String, val src: PhotoSource)
+                   val photographer: String, val photographer_url: String, val src: PhotoSource): Serializable
 
 class PhotoSource (val original: String, val large2x: String, val large: String, val medium: String,
                    val small: String, val portrait: String, val landscape: String, val tiny: String)

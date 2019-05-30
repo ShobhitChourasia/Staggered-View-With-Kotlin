@@ -3,6 +3,8 @@
           package="com.shobhit.everythingphotos">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -27,6 +29,12 @@
 
                 <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
+        </activity>
+
+        <activity android:name=".ImageDetailsView"
+        android:label="Full Image"
+        android:launchMode="singleTop">
+
         </activity>
     </application>
 
