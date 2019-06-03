@@ -23,7 +23,7 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null): Rec
             val intent = Intent(it.context, ImageDetailsView::class.java)
 
             intent.putExtra(Image_Title, pexelPhotos?.photographer)
-            intent.putExtra(Image_Url, pexelPhotos?.src?.large2x)
+            intent.putExtra(Image_Url, pexelPhotos?.src?.original)
 //            intent.putExtra(Pexel_Photo_Obj, pexelPhotos)
             it.context.startActivity(intent)
 
@@ -34,7 +34,7 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null): Rec
         itemView.imageName.text = pageData.photographer
         itemView.photoImageView.layoutParams.height = getHeightOfImageView(pageData.height, pageData.width).toInt()
 
-        Glide.with(itemView.context).load(pageData.src.large!!).into(itemView.photoImageView)
+        Glide.with(itemView.context).load(pageData.src.large2x!!).into(itemView.photoImageView)
     }
 
     fun getHeightOfImageView(origImageHeight: Float, origImageWidth: Float): Float {
