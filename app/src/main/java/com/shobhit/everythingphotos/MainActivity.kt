@@ -2,17 +2,17 @@ package com.shobhit.everythingphotos
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import com.google.gson.GsonBuilder
-import com.google.gson.internal.GsonBuildConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
-import java.io.Serializable
 
 val authKey_Pexel = "563492ad6f917000010000010b539d05730741d9909e8c7769de4389"
 
 var pexelPageData: PexelPageData? = null
+var scrollListner : GridViewPaginationScrollListner? = null
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val client = OkHttpClient().newBuilder().addInterceptor { chain ->
             val originalRequest = chain.request()
             val builder = originalRequest.newBuilder()
-                .header("Authorization", authKey_Pexel)
+                    .header("Authorization", authKey_Pexel)
             val newRequest = builder.build()
             chain.proceed(newRequest)
         }.build()
@@ -46,38 +46,63 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
 
                 val responseBody = response.body()?.string()
-//                println(response.body()?.string())
 
                 val gsonData = GsonBuilder().create()
 
                 val pexelData = gsonData.fromJson(responseBody, PexelPageData::class.java)
                 pexelPageData = pexelData
 
-                runOnUiThread { initView() }
+                runOnUiThread(this@MainActivity::initView)
             }
         })
     }
 
 
     private fun initView() {
-        staggeredRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        var staggeredLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        staggeredRecyclerView.layoutManager = staggeredLayoutManager
         //This will for default android divider
         staggeredRecyclerView.addItemDecoration(GridItemDecoration(10, 2))
 
         val imageListAdapter = ImageViewAdapter()
         staggeredRecyclerView.adapter = imageListAdapter
         pexelPageData?.photos?.let { imageListAdapter.setImageList(it) }
+
+
+
+        scrollListner = object : GridViewPaginationScrollListner(staggeredLayoutManager) {
+
+
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                print("Scrolling new")
+//            }
+
+            override fun onLoadMore(current_page: Int) {
+                print("Scrolling$current_page")
+            }
+
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                print("onScrolled new")
+//            }
+
+        }
+        scrollListner?.setupLayoutManager(staggeredLayoutManager)
+
+        staggeredRecyclerView.addOnScrollListener(scrollListner as GridViewPaginationScrollListner)
+
     }
 }
 
 
 class PexelData(val pexelData: List<PexelPageData>)
 
-class PexelPageData (val page: Int, val per_page: Int, val next_page: String,
-                     val prev_page: String, val photos: List<PexelPhotos>)
+class PexelPageData(val page: Int, val per_page: Int, val next_page: String,
+                    val prev_page: String, val photos: List<PexelPhotos>)
 
-class PexelPhotos (val id: String, val width: Float, val height: Float, val url: String,
-                   val photographer: String, val photographer_url: String, val src: PhotoSource): Serializable
+class PexelPhotos(val id: String, val width: Float, val height: Float, val url: String,
+                  val photographer: String, val photographer_url: String, val src: PhotoSource)
 
-class PhotoSource (val original: String, val large2x: String, val large: String, val medium: String,
-                   val small: String, val portrait: String, val landscape: String, val tiny: String)
+class PhotoSource(val original: String, val large2x: String, val large: String, val medium: String,
+                  val small: String, val portrait: String, val landscape: String, val tiny: String)

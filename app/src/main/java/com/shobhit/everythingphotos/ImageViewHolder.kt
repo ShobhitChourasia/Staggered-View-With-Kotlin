@@ -8,7 +8,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_image_grid_view_layout.view.*
 
-class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null): RecyclerView.ViewHolder(itemView) {
+class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
         val Image_Title = "Image Title"
@@ -30,7 +30,7 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null): Rec
         }
     }
 
-    fun bindView(pageData: PexelPhotos){
+    fun bindView(pageData: PexelPhotos) {
         itemView.imageName.text = pageData.photographer
         itemView.photoImageView.layoutParams.height = getHeightOfImageView(pageData.height, pageData.width).toInt()
 
@@ -44,6 +44,6 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null): Rec
         var width = 1080//displayMetrics.widthPixels
 //        var height = displayMetrics.heightPixels
 
-        return (origImageHeight * (width/2 - 10))/origImageWidth
+        return (origImageHeight * (width / 2 - 10)) / origImageWidth
     }
 }

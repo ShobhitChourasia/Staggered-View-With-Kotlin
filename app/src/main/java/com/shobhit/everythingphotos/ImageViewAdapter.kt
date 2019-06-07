@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-class ImageViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ImageViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var imageList = listOf<PexelPhotos>()
 
