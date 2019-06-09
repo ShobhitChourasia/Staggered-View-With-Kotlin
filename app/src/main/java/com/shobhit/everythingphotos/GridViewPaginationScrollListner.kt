@@ -45,8 +45,7 @@ abstract class GridViewPaginationScrollListner(layoutManager: StaggeredGridLayou
                 previousTotal = totalItemCount
             }
         }
-        if (!loading && (totalItemCount - visibleItemCount)
-                <= (pastVisibleItem + visibleThreshold)) {
+        if (!loading && (totalItemCount - visibleItemCount) <= (pastVisibleItem + visibleThreshold)) {
             // End has been reached
 
             // Do something

@@ -27,4 +27,8 @@ class ImageViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.imageList = imageList
         notifyDataSetChanged()
     }
+
+//    override fun getItemId(position: Int): Long {
+//        return this.imageList[position].height.toLong()
+//    }
 }

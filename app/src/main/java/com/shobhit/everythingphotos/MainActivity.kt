@@ -11,8 +11,11 @@ import java.io.IOException
 
 val authKey_Pexel = "563492ad6f917000010000010b539d05730741d9909e8c7769de4389"
 
-var pexelPageData: PexelPageData? = null
+//var pexelPageData: PexelPageData? = null
 var scrollListner : GridViewPaginationScrollListner? = null
+var currentPage = 1
+var photoList: List<PexelPhotos>? = null
+val imageListAdapter = ImageViewAdapter()
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     fun fetchDataFromPexelServer() {
 
-        val pexelUrl = "https://api.pexels.com/v1/curated?per_page=15&page=1"
+        val pexelUrl = "https://api.pexels.com/v1/curated?per_page=15&page=$currentPage"
 
         var request = Request.Builder().url(pexelUrl).build()
 
@@ -50,9 +53,15 @@ class MainActivity : AppCompatActivity() {
                 val gsonData = GsonBuilder().create()
 
                 val pexelData = gsonData.fromJson(responseBody, PexelPageData::class.java)
-                pexelPageData = pexelData
-
-                runOnUiThread(this@MainActivity::initView)
+//                pexelPageData = pexelData
+                if (currentPage == 1) {
+                    photoList = pexelData.photos
+                    runOnUiThread(this@MainActivity::initView)
+                }
+                else {
+                    runOnUiThread { updatePhotoList(pexelData.photos) }
+//                    updatePhotoList(pexelData.photos)
+                }
             }
         })
     }
@@ -63,12 +72,11 @@ class MainActivity : AppCompatActivity() {
         staggeredRecyclerView.layoutManager = staggeredLayoutManager
         //This will for default android divider
         staggeredRecyclerView.addItemDecoration(GridItemDecoration(10, 2))
-
-        val imageListAdapter = ImageViewAdapter()
+        photoList?.let(imageListAdapter::setImageList)
         staggeredRecyclerView.adapter = imageListAdapter
-        pexelPageData?.photos?.let { imageListAdapter.setImageList(it) }
-
-
+//        staggeredRecyclerView.itemAnimator?.animateChange()
+//        imageListAdapter.setImageList(pexelPageData?.photos)
+        staggeredRecyclerView.getItemAnimator()?.endAnimations()
 
         scrollListner = object : GridViewPaginationScrollListner(staggeredLayoutManager) {
 
@@ -80,6 +88,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onLoadMore(current_page: Int) {
                 print("Scrolling$current_page")
+                currentPage = current_page
+                fetchDataFromPexelServer()
             }
 
 //            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -92,6 +102,21 @@ class MainActivity : AppCompatActivity() {
 
         staggeredRecyclerView.addOnScrollListener(scrollListner as GridViewPaginationScrollListner)
 
+    }
+
+
+    private fun updatePhotoList(latestPhotoList: List<PexelPhotos>) {
+//        var updatedPhotoList: List<PexelPhotos>? = null
+        var updatePhotoList: List<PexelPhotos>? = photoList?.plus(latestPhotoList)!!
+        photoList = updatePhotoList
+        if (updatePhotoList != null) {
+            photoList?.let { imageListAdapter.setImageList(it) }
+//            staggeredRecyclerView.
+//            print(updatePhotoList.count())
+//            staggeredRecyclerView.adapter = imageListAdapter
+            imageListAdapter.notifyDataSetChanged()
+//            imageListAdapter.setHasStableIds(true)
+        }
     }
 }
 
