@@ -18,13 +18,10 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null) : Re
 
     init {
         itemView.setOnClickListener {
-            println("Item CLicked")
-
             val intent = Intent(it.context, ImageDetailsView::class.java)
 
             intent.putExtra(Image_Title, pexelPhotos?.photographer)
-            intent.putExtra(Image_Url, pexelPhotos?.src?.original)
-//            intent.putExtra(Pexel_Photo_Obj, pexelPhotos)
+            intent.putExtra(Image_Url, pexelPhotos?.src?.large2x)
             it.context.startActivity(intent)
 
         }
@@ -44,6 +41,6 @@ class ImageViewHolder(itemView: View, var pexelPhotos: PexelPhotos? = null) : Re
         var width = 1080//displayMetrics.widthPixels
 //        var height = displayMetrics.heightPixels
 
-        return (origImageHeight * (width / 2 - 10)) / origImageWidth
+        return (origImageHeight * ((width / 2) - 10)) / origImageWidth
     }
 }

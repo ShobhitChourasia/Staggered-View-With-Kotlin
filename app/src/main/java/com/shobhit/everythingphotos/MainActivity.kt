@@ -53,14 +53,12 @@ class MainActivity : AppCompatActivity() {
                 val gsonData = GsonBuilder().create()
 
                 val pexelData = gsonData.fromJson(responseBody, PexelPageData::class.java)
-//                pexelPageData = pexelData
                 if (currentPage == 1) {
                     photoList = pexelData.photos
                     runOnUiThread(this@MainActivity::initView)
                 }
                 else {
                     runOnUiThread { updatePhotoList(pexelData.photos) }
-//                    updatePhotoList(pexelData.photos)
                 }
             }
         })
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         var staggeredLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         staggeredRecyclerView.layoutManager = staggeredLayoutManager
         //This will for default android divider
-        staggeredRecyclerView.addItemDecoration(GridItemDecoration(10, 2))
+        staggeredRecyclerView.addItemDecoration(GridItemDecoration(20, 2))
         photoList?.let(imageListAdapter::setImageList)
         staggeredRecyclerView.adapter = imageListAdapter
 //        staggeredRecyclerView.itemAnimator?.animateChange()
@@ -106,16 +104,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updatePhotoList(latestPhotoList: List<PexelPhotos>) {
-//        var updatedPhotoList: List<PexelPhotos>? = null
         var updatePhotoList: List<PexelPhotos>? = photoList?.plus(latestPhotoList)!!
         photoList = updatePhotoList
         if (updatePhotoList != null) {
             photoList?.let { imageListAdapter.setImageList(it) }
-//            staggeredRecyclerView.
-//            print(updatePhotoList.count())
-//            staggeredRecyclerView.adapter = imageListAdapter
             imageListAdapter.notifyDataSetChanged()
-//            imageListAdapter.setHasStableIds(true)
         }
     }
 }
